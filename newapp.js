@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 //global variables
 //images of products (left, middle and right) click on any images to scroll threw products giving 
@@ -6,22 +6,47 @@ var imageLeft = document.getElementById('left');
 var imageMiddle = document.getElementById('middle');
 var imageRight = document.getElementById('right');
 var clickMe = document.getElementById('click-me');
+//image text
+var leftText = document.getElementById('left-text');
+var middleText = document.getElementById('middle-text');
+var rightText = document.getElementById('right-text');
 var currentLeftImageIndex = 0;
 var currentMiddleImageIndex = 1;
 var currentRightImageIndex = 2;
 // all images global variable
 var allImages = [];
+//click count
+var clickCounter = 0;
+
+
 
 //Create Constructor
-var productImages = function(src, name){
+var ProductImages = function(src, name){
     this.src = src;
     this.name = name;
     this.likes = 0;
     this.appeared = 0;
     allImages.push(this);
-}
+};
 
-//prototypes for image products
+//Prototypes 
+ProductImages.prototype.renderImage = function(){
+    imageLeft.src = this.src;
+    imageMiddle.src = this.src;
+    imageRight.src = this.src;
+};
+ProductImages.prototype.renderImageClicks = function(){
+    var listLikes = document.getElementById('listLikes');
+    var liElement = document.createElement('li');
+    liElement.textContent = `${this.name} was clicked ${this.likes}.`
+    listLikes.appendChild(liElement);
+};
+
+var likedList = function(){
+    for(var i =0; i < allImages.length; i++) {
+        allImages[i].renderImageClicks();
+    }
+};
 
 
 //click Handler and Listener
@@ -30,51 +55,72 @@ var imageClicker = function (event) {
     console.log('here');
     if(event.target.id === 'left' || event.target.id === 'middle' || event.target.id === 'right') {
         console.log('yo');
-
-//will go through random numbers to except for last number chosen to show a different image on the screen
-do {
-    var randomNumberLeft = Math.floor(Math.random() * allImages.length)
-} while (randomNumberLeft === currentLeftImageIndex || randomNumberLeft === currentMiddleImageIndex || randomNumberLeft === currentRightImageIndex);
-do {
-    var randomNumberMiddle = Math.floor(Math.random() * allImages.length)
-} while (randomNumberMiddle === currentMiddleImageIndex || randomNumberMiddle === currentLeftImageIndex || randomNumberMiddle === currentRightImageIndex);
-do {
-    var randomNumberRight = Math.floor(Math.random() * allImages.length)
-} while (randomNumberRight === currentRightImageIndex || randomNumberRight === currentLeftImageIndex || randomNumberRight === currentMiddleImageIndex);
-//not sure why I need this but let's try this out
-currentLeftImageIndex = randomNumberLeft;
-currentMiddleImageIndex = randomNumberMiddle;
-currentRightImageIndex = randomNumberRight;
-imageLeft.src = allImages[randomNumberLeft].src;
-imageMiddle.src = allImages[randomNumberMiddle].src;
-imageRight.src = allImages[randomNumberRight].src;
-}
-//should actually be able to click through pictures
-clickMe.addEventListener('click',imageClicker);
+    }
+    
+    do {
+        var randomNumberLeft = Math.floor(Math.random() * allImages.length)
+    } while (randomNumberLeft === currentLeftImageIndex || randomNumberLeft === currentMiddleImageIndex || randomNumberLeft === currentRightImageIndex);
+    do {
+        var randomNumberMiddle = Math.floor(Math.random() * allImages.length)
+    } while (randomNumberMiddle === currentLeftImageIndex || randomNumberMiddle === currentMiddleImageIndex || randomNumberMiddle === currentRightImageIndex);
+    do {
+        var randomNumberRight = Math.floor(Math.random() * allImages.length)
+    } while (randomNumberRight === currentRightImageIndex || randomNumberRight === currentLeftImageIndex || randomNumberRight === currentMiddleImageIndex);
+    
+    //increment the clicks on each picture
+    if (event.target.id === 'left'){
+        allImages[currentLeftImageIndex].likes++;
+        console.log('clicked left');
+    } else if (event.target.id === 'middle') {
+        allImages[currentMiddleImageIndex].likes++
+        console.log('clicked middle');
+     } else {
+        allImages[currentRightImageIndex].likes++;
+        console.log('clicked right');
+     }
+    allImages[currentLeftImageIndex].appeared++;
+    allImages[currentMiddleImageIndex].appeared++;
+    allImages[currentRightImageIndex].appeared++;
+    
+    //not sure why I need this but let's try this out
+    currentLeftImageIndex = randomNumberLeft;
+        currentMiddleImageIndex = randomNumberMiddle;
+        currentRightImageIndex = randomNumberRight;
+        imageLeft.src = allImages[randomNumberLeft].src;
+        imageMiddle.src = allImages[randomNumberMiddle].src;
+        imageRight.src = allImages[randomNumberRight].src;
+        leftText.textContent = allImages[randomNumberLeft].name;
+        middleText.textContent = allImages[randomNumberMiddle].name;
+        rightText.textContent = allImages[randomNumberRight].name;
+        
+        clickCounter++;
+        console.log(clickCounter);
+        if(clickCounter === 25){
+            clickMe.removeEventListener('click', imageClicker);
+            likedList();
+        }
+    
 };
-//should choose random image
-imageClicker();
 
+clickMe.addEventListener('click',imageClicker);
 
-//images that will push into the constructor
-new productImages('./img/bag.jpg');
-new productImages('.img/banana.jpg');
-new productImages('./img/bathroom');
-new productImages('./img/boots.jpg');
-new productImages('./img/boots.jpg');
-new productImages('./img/breakfast.jpg');
-new productImages('./img/bubblegum.jpg');
-new productImages('./img/chair/jpg');
-new productImages('./img/cthulhu.jpg');
-new productImages('./img/dog-duck.jpg');
-new productImages('./img/dragon.jpg');
-new productImages('./img/pen.jpg');
-new productImages('./img/pet-sweep.jpg');
-new productImages('./img/scissors.jpg');
-new productImages('./img/shark.jpg');
-new productImages('./img/sweep.jpg');
-new productImages('./img/tauntaun.jpg');
-new productImages('./img/unicorn.jpg');
-new productImages('./img/usb.gif');
-new productImages('./img/water-can');
-new productImages('./img/wine-glass.jpg');
+new ProductImages('./img/bag.jpg', 'bag');
+new ProductImages('./img/banana.jpg', 'banana');
+new ProductImages('./img/bathroom.jpg', 'bathroom');
+new ProductImages('./img/boots.jpg', 'boots');
+new ProductImages('./img/breakfast.jpg', 'breakfast');
+new ProductImages('./img/bubblegum.jpg', 'bubblegum');
+new ProductImages('./img/chair.jpg', 'chair');
+new ProductImages('./img/cthulhu.jpg', 'cthulhu');
+new ProductImages('./img/dog-duck.jpg', 'dog duck');
+new ProductImages('./img/dragon.jpg', 'dragon');
+new ProductImages('./img/pen.jpg', 'pen');
+new ProductImages('./img/pet-sweep.jpg', 'pet-sweep');
+new ProductImages('./img/scissors.jpg', 'scissors');
+new ProductImages('./img/shark.jpg', 'shark');
+new ProductImages('./img/sweep.png', 'sweep');
+new ProductImages('./img/tauntaun.jpg', 'tauntaun');
+new ProductImages('./img/unicorn.jpg', 'unicorn');
+new ProductImages('./img/usb.gif','usb');
+new ProductImages('./img/water-can.jpg', 'water-can');
+new ProductImages('./img/wine-glass.jpg', 'wine-glass');
