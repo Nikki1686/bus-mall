@@ -52,9 +52,7 @@ var likedList = function(){
 //click Handler and Listener
 //When Images are clicked this will change the pictures and count the number of likes
 var imageClicker = function (event) {
-    console.log('here');
-    if(event.target.id === 'left' || event.target.id === 'middle' || event.target.id === 'right') {
-        console.log('yo');
+    if(event.target.id === 'left' || event.target.id === 'middle' || event.target.id === 'right') {   
     }
     
     do {
@@ -62,10 +60,10 @@ var imageClicker = function (event) {
     } while (randomNumberLeft === currentLeftImageIndex || randomNumberLeft === currentMiddleImageIndex || randomNumberLeft === currentRightImageIndex);
     do {
         var randomNumberMiddle = Math.floor(Math.random() * allImages.length)
-    } while (randomNumberMiddle === currentLeftImageIndex || randomNumberMiddle === currentMiddleImageIndex || randomNumberMiddle === currentRightImageIndex);
+    } while (randomNumberMiddle === currentLeftImageIndex || randomNumberMiddle === currentMiddleImageIndex || randomNumberMiddle === currentRightImageIndex || randomNumberMiddle === randomNumberLeft);
     do {
         var randomNumberRight = Math.floor(Math.random() * allImages.length)
-    } while (randomNumberRight === currentRightImageIndex || randomNumberRight === currentLeftImageIndex || randomNumberRight === currentMiddleImageIndex);
+    } while (randomNumberRight === currentRightImageIndex || randomNumberRight === currentLeftImageIndex || randomNumberRight === currentMiddleImageIndex || randomNumberRight === randomNumberLeft || randomNumberRight === randomNumberMiddle);
     
     //increment the clicks on each picture
     if (event.target.id === 'left'){
@@ -92,7 +90,8 @@ var imageClicker = function (event) {
         leftText.textContent = allImages[randomNumberLeft].name;
         middleText.textContent = allImages[randomNumberMiddle].name;
         rightText.textContent = allImages[randomNumberRight].name;
-        
+
+
         clickCounter++;
         console.log(clickCounter);
         if(clickCounter === 25){

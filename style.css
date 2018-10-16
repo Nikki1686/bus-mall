@@ -1,0 +1,18 @@
+body main section div img {
+    width: 300px;
+    height: 300px;
+    float: left;
+}
+#left-text {
+    float:left;
+    margin-top: 350px;
+    margin-right: 75px;
+}
+#middle-text {
+    float: left;
+    margin-top: 350px;
+}
+#right-text {
+    float:left;
+    margin-top: 350px;
+}
