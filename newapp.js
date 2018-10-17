@@ -96,7 +96,8 @@ var imageClicker = function (event) {
         console.log(clickCounter);
         if(clickCounter === 25){
             clickMe.removeEventListener('click', imageClicker);
-            likedList();
+           // likedList();
+            renderChart();
         }
     
 };
@@ -123,3 +124,64 @@ new ProductImages('./img/unicorn.jpg', 'unicorn');
 new ProductImages('./img/usb.gif','usb');
 new ProductImages('./img/water-can.jpg', 'water-can');
 new ProductImages('./img/wine-glass.jpg', 'wine-glass');
+
+//============================================================
+
+var ctx = document.getElementById('chart').getContext('2d');
+//Add Chart
+
+var renderChart = function() {
+    var imageNames = [];
+    var imageLikes = [];
+    var imageShown = [];
+    var colors = [];
+    for (var i in allImages) {
+        imageNames.push(allImages[i].name);
+        imageLikes.push(allImages[i].likes);
+        imageShown.push(allImages[i].appeared)
+        colors.push('rgb(20, 83, 186)','rgb(61, 25, 160)', 'rgb(178, 12, 150)','rgb(107, 224, 144)','rgb(232, 116, 0)');
+    }
+
+    var chartData = {
+        labels: imageNames,
+        datasets:[{
+            label: 'Number of Votes per Photo',
+            data: imageLikes,
+            backgroundColor: colors,
+           // borderColor: [
+               // 'rgb(20, 83, 186)',
+              //  'rgb(61, 25, 160)',
+               // 'rgb(178, 12, 150)',
+               // 'rgb(107, 224, 144)',
+               // 'rgb(232, 116, 0)',
+            //],
+            borderWidth: 1,
+        }],
+    };
+
+
+    var chartOptions = {
+        scales: {
+            yAxes:[{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        },
+        animation: { 
+            duration: 1400,
+        },
+        responsive: true,
+    };  
+
+    var barChart = {
+        type: 'bar',
+        data: chartData,
+        options: chartOptions
+    };
+    //render the chart
+    var chart = new Chart(ctx , barChart);
+};
+
+
+
