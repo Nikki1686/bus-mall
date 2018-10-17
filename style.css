@@ -1,6 +1,9 @@
+html {
+    background-color: gainsboro;
+}
 body main section div img {
-    width: 300px;
-    height: 300px;
+    width: 250px;
+    height: 250px;
     float: left;
 }
 #left-text {
