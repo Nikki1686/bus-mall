@@ -1,21 +1,31 @@
 html {
     background-color: gainsboro;
+    width: 960px;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
 }
 body main section div img {
     width: 250px;
     height: 250px;
     float: left;
+    padding: 30px;
 }
 #left-text {
     float:left;
-    margin-top: 350px;
-    margin-right: 75px;
+    margin-top: 10px;
+    margin-left: 110px;
+    text-align: center
 }
 #middle-text {
     float: left;
-    margin-top: 350px;
+    margin-top: 10px;
+    margin-left: 300px;
+    text-align: center;
 }
 #right-text {
     float:left;
-    margin-top: 350px;
+    margin-top: 10px;
+    margin-left: 250px;
+    text-align: center;
 }
