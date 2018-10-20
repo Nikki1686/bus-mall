@@ -14,14 +14,20 @@ var currentLeftImageIndex = 0;
 var currentMiddleImageIndex = 1;
 var currentRightImageIndex = 2;
 // all images global variable
-var allImages = [];
+if (localStorage.getItem('allProductsLiked')) {
+    var allImages = JSON.parse(localStorage.getItem('allProductsLiked'));
+} else {
+    var allImages = [];
+}
 //click count
-var clickCounter = 0;
-
-
+if (localStorage.getItem('counter')) {
+    var clickCounter = JSON.parse(localStorage.getItem('counter'));
+} else {
+    var clickCounter = 0;
+}
 
 //Create Constructor
-var ProductImages = function(src, name){
+var ProductImages = function (src, name) {
     this.src = src;
     this.name = name;
     this.likes = 0;
@@ -30,31 +36,30 @@ var ProductImages = function(src, name){
 };
 
 //Prototypes 
-ProductImages.prototype.renderImage = function(){
+ProductImages.prototype.renderImage = function () {
     imageLeft.src = this.src;
     imageMiddle.src = this.src;
     imageRight.src = this.src;
 };
-ProductImages.prototype.renderImageClicks = function(){
+ProductImages.prototype.renderImageClicks = function () {
     var listLikes = document.getElementById('listLikes');
     var liElement = document.createElement('li');
     liElement.textContent = `${this.name} was clicked ${this.likes}.`
     listLikes.appendChild(liElement);
 };
 
-var likedList = function(){
-    for(var i =0; i < allImages.length; i++) {
+var likedList = function () {
+    for (var i = 0; i < allImages.length; i++) {
         allImages[i].renderImageClicks();
     }
 };
 
-
 //click Handler and Listener
 //When Images are clicked this will change the pictures and count the number of likes
 var imageClicker = function (event) {
-    if(event.target.id === 'left' || event.target.id === 'middle' || event.target.id === 'right') {   
+    if (event.target.id === 'left' || event.target.id === 'middle' || event.target.id === 'right') {
     }
-    
+
     do {
         var randomNumberLeft = Math.floor(Math.random() * allImages.length)
     } while (randomNumberLeft === currentLeftImageIndex || randomNumberLeft === currentMiddleImageIndex || randomNumberLeft === currentRightImageIndex);
@@ -64,45 +69,39 @@ var imageClicker = function (event) {
     do {
         var randomNumberRight = Math.floor(Math.random() * allImages.length)
     } while (randomNumberRight === currentRightImageIndex || randomNumberRight === currentLeftImageIndex || randomNumberRight === currentMiddleImageIndex || randomNumberRight === randomNumberLeft || randomNumberRight === randomNumberMiddle);
-    
+
     //increment the clicks on each picture
-    if (event.target.id === 'left'){
+    if (event.target.id === 'left') {
         allImages[currentLeftImageIndex].likes++;
-        console.log('clicked left');
     } else if (event.target.id === 'middle') {
         allImages[currentMiddleImageIndex].likes++
-        console.log('clicked middle');
-     } else {
+    } else {
         allImages[currentRightImageIndex].likes++;
-        console.log('clicked right');
-     }
+    }
     allImages[currentLeftImageIndex].appeared++;
     allImages[currentMiddleImageIndex].appeared++;
     allImages[currentRightImageIndex].appeared++;
-    
+
     //not sure why I need this but let's try this out
     currentLeftImageIndex = randomNumberLeft;
-        currentMiddleImageIndex = randomNumberMiddle;
-        currentRightImageIndex = randomNumberRight;
-        imageLeft.src = allImages[randomNumberLeft].src;
-        imageMiddle.src = allImages[randomNumberMiddle].src;
-        imageRight.src = allImages[randomNumberRight].src;
-        leftText.textContent = allImages[randomNumberLeft].name;
-        middleText.textContent = allImages[randomNumberMiddle].name;
-        rightText.textContent = allImages[randomNumberRight].name;
+    currentMiddleImageIndex = randomNumberMiddle;
+    currentRightImageIndex = randomNumberRight;
+    imageLeft.src = allImages[randomNumberLeft].src;
+    imageMiddle.src = allImages[randomNumberMiddle].src;
+    imageRight.src = allImages[randomNumberRight].src;
+    leftText.textContent = allImages[randomNumberLeft].name;
+    middleText.textContent = allImages[randomNumberMiddle].name;
+    rightText.textContent = allImages[randomNumberRight].name;
 
-
-        clickCounter++;
-        console.log(clickCounter);
-        if(clickCounter === 25){
-            clickMe.removeEventListener('click', imageClicker);
-           // likedList();
-            renderChart();
-        }
-    
+    clickCounter++;
+    localStorage.setItem('allProductsLiked', JSON.stringify(allImages));
+    if (clickCounter === 25) {
+        clickMe.removeEventListener('click', imageClicker);
+        renderChart();
+    }
 };
 
-clickMe.addEventListener('click',imageClicker);
+clickMe.addEventListener('click', imageClicker);
 
 new ProductImages('./img/bag.jpg', 'bag');
 new ProductImages('./img/banana.jpg', 'banana');
@@ -121,7 +120,7 @@ new ProductImages('./img/shark.jpg', 'shark');
 new ProductImages('./img/sweep.png', 'sweep');
 new ProductImages('./img/tauntaun.jpg', 'tauntaun');
 new ProductImages('./img/unicorn.jpg', 'unicorn');
-new ProductImages('./img/usb.gif','usb');
+new ProductImages('./img/usb.gif', 'usb');
 new ProductImages('./img/water-can.jpg', 'water-can');
 new ProductImages('./img/wine-glass.jpg', 'wine-glass');
 
@@ -130,7 +129,7 @@ new ProductImages('./img/wine-glass.jpg', 'wine-glass');
 var ctx = document.getElementById('chart').getContext('2d');
 //Add Chart
 
-var renderChart = function() {
+var renderChart = function () {
     var imageNames = [];
     var imageLikes = [];
     var imageShown = [];
@@ -139,40 +138,32 @@ var renderChart = function() {
         imageNames.push(allImages[i].name);
         imageLikes.push(allImages[i].likes);
         imageShown.push(allImages[i].appeared)
-        colors.push('rgb(20, 83, 186)','rgb(61, 25, 160)', 'rgb(178, 12, 150)','rgb(107, 224, 144)','rgb(232, 116, 0)');
+        colors.push('rgb(20, 83, 186)', 'rgb(61, 25, 160)', 'rgb(178, 12, 150)', 'rgb(107, 224, 144)', 'rgb(232, 116, 0)');
     }
 
     var chartData = {
         labels: imageNames,
-        datasets:[{
+        datasets: [{
             label: 'Number of Votes per Photo',
             data: imageLikes,
             backgroundColor: colors,
-           // borderColor: [
-               // 'rgb(20, 83, 186)',
-              //  'rgb(61, 25, 160)',
-               // 'rgb(178, 12, 150)',
-               // 'rgb(107, 224, 144)',
-               // 'rgb(232, 116, 0)',
-            //],
             borderWidth: 1,
         }],
     };
 
-
     var chartOptions = {
         scales: {
-            yAxes:[{
+            yAxes: [{
                 ticks: {
                     beginAtZero: true
                 }
             }]
         },
-        animation: { 
+        animation: {
             duration: 1400,
         },
         responsive: true,
-    };  
+    };
 
     var barChart = {
         type: 'bar',
@@ -180,8 +171,5 @@ var renderChart = function() {
         options: chartOptions
     };
     //render the chart
-    var chart = new Chart(ctx , barChart);
+    var chart = new Chart(ctx, barChart);
 };
-
-
-
